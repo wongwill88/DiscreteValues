@@ -1,14 +1,5 @@
-package com.example.sportbetanalysis.utils;
+package com.wongwill.sportsdataanalysis.utils;
 
-import org.springframework.stereotype.Component;
-
-/**
- * @ClassName: CalculateMethod
- * @Description: calculate data discrete values
- * @Author: wongwill
- * @Date: 2021/10/13 14:06
- **/
-@Component
 public class CalculateMethod {
     // calculate all data sum
     double Sum(double[] data) {
@@ -42,6 +33,4 @@ public class CalculateMethod {
         stdDeviation = Math.sqrt(sampleVariance(data));
         return stdDeviation;
     }
-
-
 }

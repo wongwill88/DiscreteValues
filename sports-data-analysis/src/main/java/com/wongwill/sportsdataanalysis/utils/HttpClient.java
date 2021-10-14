@@ -1,5 +1,6 @@
-package com.example.sportbetanalysis.utils;
+package com.wongwill.sportsdataanalysis.utils;
 
+import com.wongwill.sportsdataanalysis.entity.CompanyData;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -8,19 +9,17 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.springframework.stereotype.Component;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * @ClassName: SpiderClient
- * @Description: get request and post request tools
- * @Author: wongwill
- * @Date: 2021/10/13 14:26
- **/
-@Component
-public class SpiderClient {
-    public String doGet(String url) {
+public class HttpClient {
+    public static String doGet(String url) {
         CloseableHttpClient client = HttpClients.createDefault();
         CloseableHttpResponse response = null;
         String result = "error!";
@@ -65,4 +64,39 @@ public class SpiderClient {
         }
         return result;
     }
+
+    public static String crawler(String url) {
+//        String html = doGet(url);
+        Connection conn = Jsoup.connect(url);
+        Document doc = null;
+        try {
+            doc = conn.get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Elements td11 = doc.select("#td_11");
+        Elements td12 = doc.select("#td_12");
+        Elements td13 = doc.select("#td_13");
+
+
+        List<CompanyData> companyDataList = new ArrayList<>();
+        for (int i = 0; i<td11.size();i++){
+            CompanyData companyData = new CompanyData();
+            companyData.setHomeVar(Float.parseFloat(td11.get(i).text()));
+            companyData.setIndex(Float.parseFloat(td12.get(i).text()));
+            companyData.setAwayVar(Float.parseFloat(td13.get(i).text()));
+            companyDataList.add(companyData);
+            System.out.println(companyData);
+        }
+
+        return null;
+    }
+
+    public static void main(String[] args) {
+        crawler("http://nba.win007.com/odds/AsianOdds_n.aspx?id=436069");
+    }
+
+
+
 }
